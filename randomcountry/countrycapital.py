@@ -27,24 +27,27 @@ while play_game:
     print(f"What is the capital city of {country_name}")
     #get user_input
     user_input = input(">").strip().lower()
-    chance = 1
-    while user_input != countries.get(country_name).lower():
-            print("You guessed wrong, try again")
-            user_input = input(">").strip().lower()
-            chance = chance + 1
-            if chance == 3:
-                print(f"You are out of guesses! The correct answer is {countries.get(country_name)}")
-                break
+    #check user if user input are all characters
+    if user_input.isalpha():
+        chance = 1
+        while user_input != countries.get(country_name).lower():
+                print("You guessed wrong, try again")
+                user_input = input(">").strip().lower()
+                chance = chance + 1
+                if chance == 3:
+                    print(f"You are out of guesses! The correct answer is {countries.get(country_name)}")
+                    break
 
-    if user_input == countries.get(country_name).lower():
-        print(f"Correct!!!")
-    print("Do you want to play again: (yes/no)")
-    user_response = input(">").strip().lower()
-    while user_response not in ["yes","y","no","n"]:
-        user_response = input("Do you want to play again: (yes/no)").strip().lower()
+        if user_input == countries.get(country_name).lower():
+            print(f"Correct!!!")
+        print("Do you want to play again: (yes/no)")
+        user_response = input(">").strip().lower()
+        while user_response not in ["yes","y","no","n"]:
+            user_response = input("Do you want to play again: (yes/no)").strip().lower()
 
-    if user_response == "no" or user_response =="n":
-            print("Goodbye......")
-            play_game = False
+        if user_response == "no" or user_response =="n":
+                print("Goodbye......")
+                play_game = False
 
-
+    else:
+         print(f"Invalid input {user_input}. Input must be all character[a-z][A-Z]")
