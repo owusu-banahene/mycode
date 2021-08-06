@@ -23,8 +23,13 @@ def presentQuestion(question,questionNumber):
 
     response = input("Choose A, B,C, or D > ").strip().lower()
     if response in ["a","b","c","d"]:
-        if crossCheck.get(response) == correct.lower():
-
+        if crossCheck.get(response) == correct:
+            print("correct")
+        else:
+            print("wrong")
+    else:
+        print("Invalid Input")
+          
 
 
 def data():
