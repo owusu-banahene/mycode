@@ -22,17 +22,17 @@ def presentQuestion(question,questionNumber):
         C.{answers[2]}
         D.{answers[3]}      
               """)
-
-    response = input("Choose A, B,C, or D > ").strip().lower()
+    response =""
+    while response not in ["a","b","c","d"]:
+        #print("Invalid input")
+        response = input("Choose A, B,C, or D > ").strip().lower()
     if response in ["a","b","c","d"]:
         if crossCheck.get(response) == correct:
             print("correct")
             correct_answer = True
         else:
             print("wrong")
-    else:
-        print("Invalid Input")
-    
+        
     return correct_answer
 
 
