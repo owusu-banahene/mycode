@@ -4,8 +4,10 @@ import os
 import requests
 from random import shuffle
 
+
 def presentQuestion(question,questionNumber):
     answers = list()
+    correct_answer = False
     sampleQuestion = question["question"]
     correct = question["correct_answer"]
     answers.insert(0,correct)
@@ -25,16 +27,19 @@ def presentQuestion(question,questionNumber):
     if response in ["a","b","c","d"]:
         if crossCheck.get(response) == correct:
             print("correct")
+            correct_answer = True
         else:
             print("wrong")
     else:
         print("Invalid Input")
-          
+    
+    return correct_answer
 
 
 def data():
     trivial_data=dict()
     questionNumber =0
+    score = 0
     API = "https://opentdb.com/api.php?amount=10&category=21&difficulty=easy&type=multiple"
     response = requests.get(API)
     questions = response.json()
@@ -46,11 +51,15 @@ def data():
    
     for question in questions.get("results"):
         questionNumber += 1
-        presentQuestion(question,questionNumber)
+        if presentQuestion(question,questionNumber) == True:
+            score += 1
         
+    return score
 
 def main():
-   data()
+   #correct_answers =0
+   print(f"Your score was {data()} out of 10")
+
 
 if __name__ =="__main__":
     main()
