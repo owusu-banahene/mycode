@@ -13,12 +13,18 @@ def presentQuestion(question,questionNumber):
     answers.extend(incorrect)
     #shuffle multiple choice
     shuffle(answers)
+    crossCheck={"a":answers[0],"b":answers[1],"c":answers[2],"d":answers[3]}
     print(f"{questionNumber}). {sampleQuestion}")
     print(f"""\tA.{answers[0]}
         B.{answers[1]}
         C.{answers[2]}
         D.{answers[3]}      
               """)
+
+    response = input("Choose A, B,C, or D > ").strip().lower()
+    if response in ["a","b","c","d"]:
+        if crossCheck.get(response) == correct.lower():
+
 
 
 def data():
