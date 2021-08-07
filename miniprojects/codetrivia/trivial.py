@@ -36,11 +36,11 @@ def presentQuestion(question,questionNumber):
     return correct_answer
 
 
-def data():
+def data(categoryId,level):
     trivial_data=dict()
     questionNumber =0
     score = 0
-    API = "https://opentdb.com/api.php?amount=10&category=21&difficulty=easy&type=multiple"
+    API = f"https://opentdb.com/api.php?amount=10&category={categoryId}&difficulty={level}&type=multiple"
     response = requests.get(API)
     questions = response.json()
     print(""" Welcome to the trivial game
@@ -56,9 +56,28 @@ def data():
         
     return score
 
+category ={
+        "general knowledge":9,"book":10,"film":11,"music":12,"musicals and theatres":13,"television":14,"video":15,
+        "board games":16,"science and nature":17,"computers":18,"mathematics":19,"mythology":20,"sports":21,
+        "geography":22,"history":23,"politics":24,"art":25,"celebrities":26,"animals":27,"vehicels":28,
+        "comics":29,"gadgets":30,"japanese anime and manga":31,"cartoons and animations":32
+        }
+
 def main():
    #correct_answers =0
-   print(f"Your score was {data()} out of 10")
+   play = True
+   while play:
+       print(f'Choose the category from the list {[*category]}:')
+       game_category = input(">").strip().lower()
+       print("Choose the level of difficulty from the list [easy,medium,hard]: ")
+       game_difficulty = input(">").strip().lower()
+       print(f"Your score was {data(category.get(game_category),game_difficulty)} out of 10")
+       print("Do you want to continue with the game? (Yes/No)")
+       user_response = ""
+       while user_response.lower() not in ["yes","y","no","n"]:
+           user_response = input(">").strip().lower()
+       if user_response in ["no","n"]:
+            play= False
 
 
 if __name__ =="__main__":
