@@ -3,6 +3,8 @@
 import os
 import requests
 from random import shuffle
+from bs4 import BeautifulSoup
+from html import unescape
 
 
 def presentQuestion(question,questionNumber):
@@ -16,7 +18,7 @@ def presentQuestion(question,questionNumber):
     #shuffle multiple choice
     shuffle(answers)
     crossCheck={"a":answers[0],"b":answers[1],"c":answers[2],"d":answers[3]}
-    print(f"{questionNumber}). {sampleQuestion}")
+    print(f"{questionNumber}). {BeautifulSoup(unescape(sampleQuestion),'lxml').text}")
     print(f"""\tA.{answers[0]}
         B.{answers[1]}
         C.{answers[2]}
