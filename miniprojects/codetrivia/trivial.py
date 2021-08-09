@@ -43,17 +43,20 @@ def data(categoryId,level):
     API = f"https://opentdb.com/api.php?amount=10&category={categoryId}&difficulty={level}&type=multiple"
     response = requests.get(API)
     questions = response.json()
-    print(""" Welcome to the trivial game
+    if len(questions.get("results")):
+        print(""" Welcome to the trivial game
 
-              You will be presented with 10 mulitple choice questions 
-              
-              """)
-   
-    for question in questions.get("results"):
-        questionNumber += 1
-        if presentQuestion(question,questionNumber) == True:
-            score += 1
-        
+                  You will be presented with 10 mulitple choice questions 
+                  
+                  """)
+       
+        for question in questions.get("results"):
+            questionNumber += 1
+            if presentQuestion(question,questionNumber) == True:
+                score += 1
+    else:
+        print("Sorry, we dont have questions under this category and difficulty level") 
+        score = -1
     return score
 
 category ={
@@ -71,13 +74,15 @@ def main():
        game_category = input(">").strip().lower()
        print("Choose the level of difficulty from the list [easy,medium,hard]: ")
        game_difficulty = input(">").strip().lower()
-       print(f"Your score was {data(category.get(game_category),game_difficulty)} out of 10")
-       print("Do you want to continue with the game? (Yes/No)")
-       user_response = ""
-       while user_response.lower() not in ["yes","y","no","n"]:
-           user_response = input(">").strip().lower()
-       if user_response in ["no","n"]:
-            play= False
+       scored_value = data(category.get(game_category),game_difficulty)
+       if scored_value != -1:
+           print(f"Your score was {scored_value} out of 10")
+           print("Do you want to continue with the game? (Yes/No)")
+           user_response = ""
+           while user_response.lower() not in ["yes","y","no","n"]:
+               user_response = input(">").strip().lower()
+           if user_response in ["no","n"]:
+                play= False
 
 
 if __name__ =="__main__":
