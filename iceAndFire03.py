@@ -21,12 +21,14 @@ def characters(data,chara_num):
         for house in allegiances:
             print(requests.get(house).json()['name'])
     else:
-        print('None')
+        print('No Allegiance')
     print()
     if len(books) > 0:
         print("Books:")
         for book in books:
             print(requests.get(book).json()['name'])
+    else:
+        print("No Books")
     print()
     if len(povBooks)> 0:
         print("Point of View books:")
