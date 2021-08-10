@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import requests
+import argparse
+from datetime import datetime
+from datetime import timedelta
 API = "https://api.nasa.gov/neo/rest/v1/feed"
 
 def getData(start,end):
@@ -46,13 +49,20 @@ def  getApi_Key():
         key = nasafile.readline()
     return key.rstrip("\n")
 
+def addDays(start):
+    end = datetime.strptime(start,'%Y-%m-%d')+ timedelta(days=7)
+    return end
 
 def main():
-    print("Enter the start date inthe form YYYY-MM-DD: ")
-    sDate=input(">").strip()
-    print("Enter the end date in the form YYYY-MM-DD: ")
-    eDate=input(">").strip()
-    computeAsteroids(getData(sDate,eDate))
+    parser = argparse.ArgumentParser(description='The start and end date for asteroid search')
+    parser.add_argument('start_date',help='starting date for asteroid search')
+    parser.add_argument('-e',metavar='end_date',default=str(addDays(parser.parse_args().start_date)),help='ending date for the asteroid search')
+    args = parser.parse_args()
+    #print("Enter the start date inthe form YYYY-MM-DD: ")
+    #sDate=input(">").strip()
+    #print("Enter the end date in the form YYYY-MM-DD: ")
+    #eDate=input(">").strip()
+    computeAsteroids(getData(args.start_date,args.e))
 
 
 if __name__=="__main__":
