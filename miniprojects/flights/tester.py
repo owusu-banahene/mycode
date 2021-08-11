@@ -4,6 +4,8 @@ from pprint import pprint
 import pandas as pd
 
 API = 'https://api.aviationstack.com/v1/'
+
+
 def credential():
     with open('flight.creds','r') as aviationFile:
         aviation = aviationFile.readline()
@@ -17,6 +19,7 @@ def getFlights(creds,details):
     flight_data = requests.get(url,params).json()
     #print(flight_data["data"])
     return flight_data["data"]
+
 
 def getStatusFlights(flights):
     active=[]
@@ -41,9 +44,14 @@ def getStatusFlights(flights):
             diverted.append(flight)
         
     print(f"Out of 100 sample flights: active={len(active)},scheduled={len(scheduled)},landed={len(landed)},cancelled={len(cancelled)},incident={len(incident)} and diverted={len(diverted)}")
-    print("Cancelled Flights Summary")
-    pprint(getAirlinesCount(cancelled))
-    getCancelledDetails(cancelled)
+    #print("Cancelled Flights Summary")
+    #pprint(getAirlinesCount(cancelled))
+    #getDetails(cancelled,'Cancellation')
+    #getDetails(active,'Active')
+    #getDetails(scheduled,'Scheduled Flight')
+    #getDetails(landed,'Landed')
+    #getDetails(incident,'Flights with incident')
+    #getDetails(diverted,'Flights that were diverted ')
 
 
 
@@ -60,16 +68,22 @@ def getAirlinesCount(flight_data):
     #print(name_of_airline)
     return name_of_airline
 
-def getCancelledDetails(cancelData):
-    pprint("Cancellation Summary")
-    for cancel in cancelData:
-        print(f"{cancel['airline']['name']} from {cancel['departure']['airport']} to {cancel['arrival']['airport']}")
+
+def getDetails(statusData,status):
+    if len(statusData) > 0:
+        print(f"{status} Summary")
+        print("============================")
+        for cancel in statusData:
+            pprint(f"{cancel['airline']['name']} from {cancel['departure']['airport']} to {cancel['arrival']['airport']}")
+        print("\n")
 
 
 
 def visualizeData(vflights):
     visualize = pd.json_normalize(vflights)
-    print(visualize.head())
+    visualize = visualize[['flight_date','flight_status','aircraft','departure.airport','arrival.airport','airline.name']]
+    pprint(visualize.head(10))
+    return visualize
 
 
 def main():
@@ -77,7 +91,7 @@ def main():
     getStatusFlights(current_data)
     print()
     print("Types of airline and their count:")
-    #pprint(getAirlinesCount(current_data))
+    print(getAirlinesCount(current_data))
     #visualize data
     visualizeData(current_data)
     
