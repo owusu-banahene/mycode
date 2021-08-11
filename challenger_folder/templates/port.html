@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+   <body>
+<ul>
+{% for port in ports %}
+<li>{{port['ip']}} {{port['fqdn']}} # {{port['hostname']}}</li>
+{% endfor %}   
+</ul>          
+   </body>
+</html>
+

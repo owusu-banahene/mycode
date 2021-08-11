@@ -6,11 +6,15 @@ from flask import render_template
 import requests
 from random import shuffle
 from flask import make_response
+from flask import abort
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 API="https://opentdb.com/api.php?amount=1&category=21&difficulty=easy&type=multiple"
 #app = Flask(__name__)
 
+limiter = Limiter(app,key_func=get_remote_address,default_limits=["10 per hour","50 per day"])
 @app.route("/correct")
 def success():
     return f"That is correct!"
@@ -33,8 +37,8 @@ def login():
             else:
                 return redirect("/")
         else:
-            return redirect("/")
-
+            abort(401)
+@limiter.limit("5 per day")
 @app.route("/")
 def index():
     solutions=[]
