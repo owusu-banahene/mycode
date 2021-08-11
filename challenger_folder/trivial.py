@@ -10,19 +10,36 @@ app = Flask(__name__)
 API="https://opentdb.com/api.php?amount=1&category=21&difficulty=easy&type=multiple"
 #app = Flask(__name__)
 
+@app.route("/correct")
+def success():
+    return f"That is correct!"
+
+
+@app.route("/checks", methods = ["POST"])
+def login():
+        if request.form.get("chosen_answer"):
+            answer = request.form.get("chosen_answer")
+            solution = request.form.get("hidden")
+            if answer.lower() == solution.lower():
+                return redirect("/correct")
+            else:
+                return redirect("/")
+        else:
+            return redirect("/")
+
 @app.route("/")
 def index():
     solutions=[]
     response = requests.get(API).json()
-    questions = response.get("results")["question"]
-    correct = response.get("results")["correct_answer"]
+    questions = response.get("results")[0]["question"]
+    correct = response.get("results")[0]["correct_answer"]
     solutions.append(correct)
-    incorrect = response.get("results")["incorrect_answers"]
+    incorrect = response.get("results")[0]["incorrect_answers"]
     solutions.extend(incorrect)
     shuffle(solutions)
     answers={'a':solutions[0],'b':solutions[1],
             'c':solutions[2],'d':solutions[3]}
-    return render_template("questions.html",question=questions,answers=answers,soln=correct)
+    return render_template("questions.html",question=questions,answers=answers,soln=list(answers.keys())[list(answers.values()).index(correct)])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2224)

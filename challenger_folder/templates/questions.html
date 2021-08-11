@@ -6,8 +6,8 @@
     <form action = "/checks" method = "POST">
 	    <p>{{question}}</p>
 	    <ol type="A">
-{% for answer in answers %}
-<li>{{ answer.get("validAns") }}</li>
+{% for answer in answers.keys() %}
+<li>{{ answers[answer] }}</li>
   {% endfor %} </ul>
 	    <p><input type = "text" name = "chosen_answer"></p>
 	    <p><input type = "hidden" name = "hidden" value="{{soln}}"></p>

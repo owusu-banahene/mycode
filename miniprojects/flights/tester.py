@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import requests
+from pprint import pprint
 
-API = 'http://api.aviationstack.com/v1/'
+API = 'https://api.aviationstack.com/v1/'
 def credential():
     with open('flight.creds','r') as aviationFile:
         aviation = aviationFile.readline()
@@ -10,9 +11,10 @@ def credential():
 
 def getFlights(creds,details):
     url =f'{API}{details}'
-    params ={'access_key':creds}
+    params ={'access_key':creds
+            }
     flight_data = requests.get(url,params).json()
-    #print(len(flight_data["data"]))
+    #print(flight_data["data"])
     return flight_data["data"]
 
 def getStatusFlights(flights):
@@ -38,6 +40,9 @@ def getStatusFlights(flights):
             diverted.append(flight)
         
     print(f"Out of 100 sample flights: active={len(active)},scheduled={len(scheduled)},landed={len(landed)},cancelled={len(cancelled)},incident={len(incident)} and diverted={len(diverted)}")
+    print("Cancelled Flights Summary")
+    pprint(getAirlinesCount(cancelled))
+
 
 
 def getAirlinesCount(flight_data):
@@ -50,7 +55,7 @@ def getAirlinesCount(flight_data):
         else:
             name_of_airline[flight['airline']['name']] = 1
 
-    print(name_of_airline)
+    #print(name_of_airline)
     return name_of_airline
 
 
@@ -59,7 +64,7 @@ def main():
     getStatusFlights(current_data)
     print()
     print("Types of airline and their count:")
-    getAirlinesCount(current_data)
+    pprint(getAirlinesCount(current_data))
 
 
 if __name__ == "__main__":
