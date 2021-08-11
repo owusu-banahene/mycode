@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Trivial</title>
+    <form action = "/checks" method = "POST">
+	    <p>{{question}}</p>
+	    <ol type="A">
+{% for answer in answers %}
+<li>{{ answer.get("validAns") }}</li>
+  {% endfor %} </ul>
+	    <p><input type = "text" name = "chosen_answer"></p>
+	    <p><input type = "hidden" name = "hidden" value="{{soln}}"></p>
+        <p><input type = "submit" value = "submit"></p>
+    </form>
+</head>
+<body>
+
+</body>
+</html>
+
