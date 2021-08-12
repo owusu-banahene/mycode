@@ -47,12 +47,12 @@ def getstatusflights(flights):
     print(f"Out of 100 sample flights: active={len(active)},scheduled={len(scheduled)},landed={len(landed)},cancelled={len(cancelled)},incident={len(incident)} and diverted={len(diverted)}")
     #print("Cancelled Flights Summary")
     #pprint(getAirlinesCount(cancelled))
-    #getdetailsplot(cancelled,'Cancellation')
-    #getdetails(active,'Active')
+    getdetails(cancelled,'Cancellation')
+    getdetails(active,'Active')
     getdetails(scheduled,'Scheduled Flight')
-    #getdetails(landed,'Landed')
-    #getdetails(incident,'Flights with incident')
-    #getdetails(diverted,'Flights that were diverted ')
+    getdetails(landed,'Landed')
+    getdetails(incident,'Flights with incident')
+    getdetails(diverted,'Flights that were diverted ')
 
 
 
@@ -76,27 +76,33 @@ def statusplots(statusdata,filename):
 
 def getdetails(statusdata,status):
     if len(statusdata) > 0:
+        print("\n")
+        print(f"{status} summary")
+        print("================================")
         status_df = pd.DataFrame.from_dict(getairlinescount(statusdata),orient='index')
         status_df.reset_index(level=0,inplace=True)
-        status_df.columns=['airline_name','occurance']
-        print(status_df.columns)
-        print(status_df.head(10))
+        status_df.columns=['airline_name','occurrence']
+        #sort by occurrence in descending
+        status_df.sort_values(by='occurrence',inplace=True,ascending=False)
+        #print top 5
+        print(status_df.head(5).to_string(index=False))
+        #plt.title(status)
+        status_df.plot.barh(x='airline_name',y='occurrence')
         plt.title(status)
-        status_df.plot.barh(x='airline_name',y='occurance')
         plt.show()
         plt.savefig(f'/home/student/static/{status}.png')
         #print(f"{status} Summary")
         #print("============================")
         #for cancel in statusData:
         #    pprint(f"{cancel['airline']['name']} from {cancel['departure']['airport']} to {cancel['arrival']['airport']}")
-        print("\n")
+        #print("\n")
 
 
 
 def visualizedata(vflights):
     visualize = pd.json_normalize(vflights)
     visualize = visualize[['flight_date','flight_status','aircraft','departure.airport','arrival.airport','airline.name']]
-    pprint(visualize.head(10))
+    #pprint(visualize.head(10))
     return visualize
 
 
@@ -104,25 +110,15 @@ def main():
     current_data=getflights(credential(),'flights')
     getstatusflights(current_data)
     print()
-    print("Types of airline and their count:")
-    print(getairlinescount(current_data))
+    #print("Types of airline and their count:")
+    #print(getairlinescount(current_data))
     #visualize data
     subflights = visualizedata(current_data)
     #limit it to cancelled flights
+    print("Cancellation flights details")
+    print("================================================================================================================================================================")
     subflights = subflights[subflights['flight_status'] =='cancelled']
-    print(subflights)
-    #flights with more than 4 cancellation occurrance
-    #subflights['airline.name'].value_counts().loc[lambda x:x>4].plot(kind='barh')
-    #plt.show()
-    #plt.savefig('/home/student/static/more_than_four_cancel_flight.png')
-     #flights less than 2  cancellation occurrance
-    #subflights['airline.name'].value_counts().loc[lambda x:x<2].plot(kind='barh')
-    #plt.show()
-    #plt.savefig('/home/student/static/less_than_two_cancel_flight.png')
-     #flights between 2 andn 4 cancellation occurrance
-    #subflights['airline.name'].value_counts().loc[lambda x:x >=2 & x <=4].plot(kind='barh')
-    #plt.show()
-    #plt.savefig('/home/student/static/between_two_and_four_cancel_flight.png')
+    print(subflights.to_string(index=False))
 
 
 if __name__ == "__main__":
