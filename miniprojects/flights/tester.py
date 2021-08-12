@@ -2,6 +2,7 @@
 import requests
 from pprint import pprint
 import pandas as pd
+import matplotlib.pyplot as plt
 
 API = 'https://api.aviationstack.com/v1/'
 
@@ -93,8 +94,19 @@ def main():
     print("Types of airline and their count:")
     print(getAirlinesCount(current_data))
     #visualize data
-    visualizeData(current_data)
-    
+    subflights = visualizeData(current_data)
+    #flights with more than 4 cancellation occurrance
+    subflights['airline.name'].value_counts().loc[lambda x:x>4].plot(kind='barh')
+    plt.show()
+    plt.savefig('/home/student/static/more_than_four_cancel_flight.png')
+     #flights less than 2  cancellation occurrance
+    subflights['airline.name'].value_counts().loc[lambda x:x<2].plot(kind='barh')
+    plt.show()
+    plt.savefig('/home/student/static/less_than_two_cancel_flight.png')
+     #flights between 2 andn 4 cancellation occurrance
+    #subflights['airline.name'].value_counts().loc[lambda x:x >=2 & x <=4].plot(kind='barh')
+    #plt.show()
+    #plt.savefig('/home/student/static/between_two_and_four_cancel_flight.png')
 
 
 if __name__ == "__main__":
