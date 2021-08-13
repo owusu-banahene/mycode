@@ -3,6 +3,7 @@ import requests
 from pprint import pprint
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 API = 'https://api.aviationstack.com/v1/'
 
@@ -13,7 +14,8 @@ def credential():
     return aviation.rstrip("\n")
 
 
-def getflights(creds,details,fdate):
+def getflights(creds,details,fdate=datetime.today().strftime('%oY-%m-%d')):
+    print(fdate)
     url =f'{API}{details}'
     params ={'access_key':creds,
             'flight_date':fdate
