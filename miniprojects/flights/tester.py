@@ -13,9 +13,10 @@ def credential():
     return aviation.rstrip("\n")
 
 
-def getflights(creds,details):
+def getflights(creds,details,fdate):
     url =f'{API}{details}'
-    params ={'access_key':creds
+    params ={'access_key':creds,
+            'flight_date':fdate
             }
     flight_data = requests.get(url,params).json()
     #print(flight_data["data"])
@@ -77,8 +78,8 @@ def statusplots(statusdata,filename):
 def getdetails(statusdata,status):
     if len(statusdata) > 0:
         print("\n")
-        print(f"{status} summary")
-        print("================================")
+        print(f"{status} summary".center(50))
+        print("================================".center(50))
         status_df = pd.DataFrame.from_dict(getairlinescount(statusdata),orient='index')
         status_df.reset_index(level=0,inplace=True)
         status_df.columns=['airline_name','occurrence']
@@ -87,7 +88,9 @@ def getdetails(statusdata,status):
         #print top 5
         print(status_df.head(5).to_string(index=False))
         #plt.title(status)
-        status_df.plot.barh(x='airline_name',y='occurrence')
+        fig,ax= plt.subplots(figsize=(10,6))
+        plt.setp(ax.get_xticklabels(), rotation=45)
+        status_df.plot.bar(x='airline_name',y='occurrence')
         plt.title(status)
         plt.show()
         plt.savefig(f'/home/student/static/{status}.png')
@@ -107,7 +110,8 @@ def visualizedata(vflights):
 
 
 def main():
-    current_data=getflights(credential(),'flights')
+    fdate = input("Enter the flight date in the format[YYYY-MM-DD]: ").strip()
+    current_data=getflights(credential(),'flights',fdate)
     getstatusflights(current_data)
     print()
     #print("Types of airline and their count:")
@@ -115,7 +119,7 @@ def main():
     #visualize data
     subflights = visualizedata(current_data)
     #limit it to cancelled flights
-    print("Cancellation flights details")
+    print("Cancelled flights details")
     print("================================================================================================================================================================")
     subflights = subflights[subflights['flight_status'] =='cancelled']
     print(subflights.to_string(index=False))
